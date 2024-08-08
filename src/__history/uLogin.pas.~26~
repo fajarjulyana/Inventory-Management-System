@@ -1,0 +1,111 @@
+unit uLogin;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
+  FMX.Controls.Presentation, FMX.StdCtrls, uMenu, FMX.Objects, FMX.Effects,
+  FMX.Edit, uDM;
+
+type
+  TForm1 = class(TForm)
+    Rectangle1: TRectangle;
+    Rectangle2: TRectangle;
+    ShadowEffect1: TShadowEffect;
+    ShadowEffect2: TShadowEffect;
+    Circle1: TCircle;
+    ShadowEffect3: TShadowEffect;
+    Label1: TLabel;
+    CheckBox1: TCheckBox;
+    CornerButton1: TCornerButton;
+    SB: TStyleBook;
+    Edit2: TEdit;
+    Edit1: TEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    ShadowEffect4: TShadowEffect;
+    ShadowEffect5: TShadowEffect;
+    procedure CheckBox1Change(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure CornerButton1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.fmx}
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+if not Assigned(Form2) then
+Form2:= TForm2.Create(Self);
+
+Form2.ShowModal(
+              procedure(ModalResult: TModalResult)
+              begin
+                if ModalResult = mrClose then Application.Terminate;
+              end
+              );
+
+end;
+
+procedure TForm1.CheckBox1Change(Sender: TObject);
+begin
+if not Checkbox1.IsChecked then
+   begin
+     Edit2.Password := true;
+   end
+   else
+   begin
+     Edit2.Password := false;
+   end;
+end;
+
+procedure TForm1.CornerButton1Click(Sender: TObject);
+var pwd: string;
+begin
+if trim(Edit1.Text)='' then
+   begin
+     ShowMessage('Please Enter Username');
+     Edit1.SetFocus;
+   end
+   else
+   begin
+     with DataModule1 do begin
+       FDConnection1.open;
+       FDQuery1.sql.clear;
+       FDQuery1.sql.text := 'select *from users where username='+Quotedstr(Edit1.text);
+       FDQuery1.Open;
+       if FDQuery1.RecordCount > 0 then
+       begin
+       pwd := FDQuery1.FieldByName('password').AsString;
+       if pwd=Edit2.Text then
+       begin
+       if not Assigned(Form2) then
+        Form2:= TForm2.Create(Self);
+        Form2.ShowModal(
+              procedure(ModalResult: TModalResult)
+              begin
+                if ModalResult = mrClose then Application.Terminate;
+              end
+              );
+       end else
+       begin
+         ShowMessage('Incorrect Password');
+       end;
+       end else
+       begin
+        ShowMessage('Incorrect Username');
+       end
+
+     end;
+  end;
+end;
+end.

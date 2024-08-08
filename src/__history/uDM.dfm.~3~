@@ -1,0 +1,24 @@
+object DataModule1: TDataModule1
+  Height = 201
+  Width = 389
+  PixelsPerInch = 96
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=SQLite'
+      
+        'Database=C:\Users\Dena Gustiana\Downloads\delphi src\inventory2\' +
+        'assets\database\inventorydb.db3')
+    Connected = True
+    LoginPrompt = False
+    Left = 64
+    Top = 48
+  end
+  object FDQuery1: TFDQuery
+    Active = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'Select * From users')
+    Left = 64
+    Top = 120
+  end
+end
